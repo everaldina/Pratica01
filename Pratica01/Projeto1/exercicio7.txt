@@ -1,0 +1,6 @@
+1. C/C++
+2. C/C++ Compile Run
+3. C/C++ Extension Pack
+4. C/C++ Themes
+5. CMake
+6. CMake Tools

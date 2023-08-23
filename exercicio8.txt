@@ -1,0 +1,2 @@
+GitHub Copilot: IA para sugestões para autocompletar o codigo.
+Markdownlint: Ajuda a fazer a formatação de arquivos README
