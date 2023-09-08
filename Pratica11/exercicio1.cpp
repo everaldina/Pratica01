@@ -23,4 +23,5 @@ int main(){
     cout << "Maximo: " << max << endl;
     cout << "Minimo: " << min << endl;
 
+    return 0;
 }
