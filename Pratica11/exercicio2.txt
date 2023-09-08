@@ -1,0 +1,6 @@
+Coesão Comunicacional
+    - Como ele executa duas tarefas (retornar o minimo e o maximo), nao pode
+    se considerado uma coesão funcional, porem as tarefas sao relacionadas e 
+    tratam de um mesmo conjunto de dados, por isso se trata de uma coesao comunicacional.
+Acoplamento de imagem
+    
