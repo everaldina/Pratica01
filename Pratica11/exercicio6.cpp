@@ -5,9 +5,9 @@ using namespace std;
 int* intercala(int *vet1, int tam1, int *vet2, int tam2);
 
 int main(){
-    int i, tam_impar = 7, tam_par = 6;
-    int vetor_impar[7] = {1,2,3,4,5,6,7};
-    int vetor_par[6] = {1,2,3,4,5,6};
+    int i, tam_impar = 5, tam_par = 2;
+    int vetor_impar[tam_impar] = {1,2,3, 4, 6};
+    int vetor_par[tam_par] = {5,0};
     int *result;
 
     cout << "Vetor par: ";
@@ -39,22 +39,28 @@ int main(){
 
 int* intercala(int *vet1, int tam1, int *vet2, int tam2){
     int tamResult = tam1 + tam2;
-    int vetResult[tamResult];
+    int *vetResult = new int[tamResult];
+    int count1 = 0, count2 = 0;
     int i;
 
     for(i = 0; i < tamResult; i+=2){
-        cout << ".";
-        if(i/2 < tam1)
-            vetResult[i] = vet1[i/2];
-        else
-            vetResult[i] = vet2[i/2];
+        if(count1 < tam1){
+            vetResult[i] = vet1[count1];
+            count1++;
+        }else if(count2 < tam2){
+            vetResult[i] = vet2[count2];
+            count2++;
+        }
 
-        if(i/2 < tam2)
-            vetResult[i+1] = vet2[i/2];
-        else
-            vetResult[i+1] = vet1[i/2];
+        if(count2 < tam2){
+            vetResult[i+1] = vet2[count2];
+            count2++;
+        }else if(count1 < tam1){
+            vetResult[i+1] = vet1[count1];
+            count1++;
+        }
+
     }
 
-    cout << "-";
     return vetResult;
 }
