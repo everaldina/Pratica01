@@ -20,17 +20,33 @@ struct Passagem{
 };
 
 int main(){
-    vector<Passagem[40]> onibus;
+    vector<Passagem[40]> resgistroOnibus;
 
 
 
     return 0;
 }
 
-void addOnibus(vector<Passagem[40]> &onibus, char tipo, short int dia, short int mes, int ano, short int hora, short int min){
+bool addOnibus(vector<Passagem[POLTRONAS]> &registros, char tipo, short int dia, short int mes, int ano, short int hora, short int min){
     int countViagens = 0;
+    Passagem onibus[POLTRONAS];
+    bool resultCriacao;
 
+    for(Passagem p : registros[0]){
+        if(p.dia == registros[0]->dia && p.mes == registros[0]->mes && p.ano == registros[0]->ano){
+            if(p.tipo == registros[0]->tipo)
+                countViagens++;
+        }
+    }
 
+    if(countViagens <= VIAGENS_DIA){
+        resultCriacao = iniciarOnibus(*onibus, tipo, dia, mes, ano, hora, min);
+        if(resultCriacao){
+            registros.push_back(onibus);
+            return true;
+        }
+    }
+    return false;
 }
 
 bool iniciarOnibus(Passagem &passagens, char tipo, short int dia, short int mes, int ano, short int hora, short int min){
