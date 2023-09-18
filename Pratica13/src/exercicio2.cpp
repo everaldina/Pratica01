@@ -21,27 +21,35 @@ int main(){
     bool cont = true;
     char ch;
 
-    do{
+    // adiciona empregados
+    do{ 
         cout << "Nome do empregado: ";
         cin >> empregados[qntd].nome;
         cout << "Sobrenome do empregado: ";
         cin >> empregados[qntd].sobrenome;
-        do{
+
+        do{ // checa se ano de nascimento eh valido
             cout << "Ano de nascimento: ";
             cin >> empregados[qntd].anoNascimento;
             if(empregados[qntd].anoNascimento < 0)
                 cout << "Ano de nascimento invalido!" << endl;
         }while(empregados[qntd].anoNascimento < 0);
+
         cout << "RG: ";
         cin >> empregados[qntd].RG;
-        do{
+        do{ // checa se ano de admissao eh valido
             cout << "Ano de admissao: ";
             cin >> empregados[qntd].anoAdmissao;
             if(empregados[qntd].anoAdmissao < empregados[qntd].anoNascimento)
                 cout << "Ano de admissao invalido!" << endl;
         }while(empregados[qntd].anoAdmissao <= empregados[qntd].anoNascimento);
-        cout << "Salario: ";
-        cin >> empregados[qntd].salario;
+        
+        do{ // checa se salario eh valido
+            cout << "Salario: ";
+            cin >> empregados[qntd].salario;
+            if(empregados[qntd].salario <= 0)
+                cout << "Salario invalido!" << endl;
+        }while(empregados[qntd].salario <=0);
         qntd++;
 
         cout << "\nDeseja continuar (s/n)? ";
