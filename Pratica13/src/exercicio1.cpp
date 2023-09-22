@@ -19,6 +19,20 @@ struct Passagem{
     short int min;
 };
 
+struct Onibus{
+    Passagem poltronas[POLTRONAS];
+    int 
+};
+
+// funcoes de validacao data hora
+bool validarData(short int dia, short int mes, int ano);
+bool validarHora(short int hora, short int min);
+bool isBissexto(short int ano);
+
+// funcoes de onibus
+bool addOnibus(vector<Passagem[POLTRONAS]> &registros, char tipo, short int dia, short int mes, int ano, short int hora, short int min);
+bool iniciarOnibus(Passagem &passagens, char tipo, short int dia, short int mes, int ano, short int hora, short int min);
+
 int main(){
     vector<Passagem[40]> resgistroOnibus;
 
@@ -52,27 +66,42 @@ bool addOnibus(vector<Passagem[POLTRONAS]> &registros, char tipo, short int dia,
 bool iniciarOnibus(Passagem &passagens, char tipo, short int dia, short int mes, int ano, short int hora, short int min){
     int i;
 
-    if(dia>=1 && mes>=1 && mes<=12 && hora<=24 && hora>=0 && min>=0 && min<=59){
-        if((mes == 2 && isBissexto(ano) && dia<=29) || // caso fevereiro e ano bissexto
-            (mes == 2 && dia<=28) || // caso fevereiro e ano bissexto
-            ((mes==1 || mes==3 || mes==5 || mes==7 || mes==8 || mes==10 || mes==12) && dia<=31) || //meses com 31 dias
-            ((mes==4 || mes==6 || mes==9 || mes==11) && dia<=30)) // meses com 30 dias
-            {
-            for(i=0; i<POLTRONAS; i++){
-                passagens.poltrona = i;
-                passagens.tipo = tipo;
-                passagens.min = min;
-                passagens.hora = hora;
-                passagens.dia = dia;
-                passagens.mes = mes;
-                passagens.ano = ano;
-            }
-            return true;
+    if(validarData(dia, mes, ano) && validarHora(hora, min)){
+        for(i=0; i<POLTRONAS; i++){
+            passagens.poltrona = i;
+            passagens.tipo = tipo;
+            passagens.min = min;
+            passagens.hora = hora;
+            passagens.dia = dia;
+            passagens.mes = mes;
+            passagens.ano = ano;
         }
-        return false;
+        return true;
     }
     return false;
 
+}
+
+bool validarData(short int dia, short int mes, int ano){
+    if(dia>=1 && mes>=1 && mes<=12){
+        if(mes == 2 && isBissexto(ano) && dia<=29) // caso fevereiro e ano bissexto
+            return true;
+        if(mes == 2 && dia<=28) // caso fevereiro e ano bissexto 
+            return true;
+        if((mes==1 || mes==3 || mes==5 || mes==7 || mes==8 || mes==10 || mes==12) && dia<=31) //meses com 31 dias
+            return true;
+        if((mes==4 || mes==6 || mes==9 || mes==11) && dia<=30) // meses com 30 dias
+            return true;
+        return false;
+    }
+    return false;
+}
+
+bool validarHora(short int hora, short int min){
+    if(hora<=24 && hora>=0 && min>=0 && min<=59)
+        return true;
+    else
+        return false;
 }
 
 bool isBissexto(short int ano){
