@@ -21,7 +21,7 @@ struct Passagem{
 
 struct Onibus{
     Passagem poltronas[POLTRONAS];
-    int 
+    int qntdPassagens = 0;
 };
 
 // funcoes de validacao data hora
@@ -30,53 +30,55 @@ bool validarHora(short int hora, short int min);
 bool isBissexto(short int ano);
 
 // funcoes de onibus
-bool addOnibus(vector<Passagem[POLTRONAS]> &registros, char tipo, short int dia, short int mes, int ano, short int hora, short int min);
-bool iniciarOnibus(Passagem &passagens, char tipo, short int dia, short int mes, int ano, short int hora, short int min);
+bool addOnibus(vector<Onibus> &registros, char tipo, short int dia, short int mes, int ano, short int hora, short int min);
+bool iniciarOnibus(Onibus &onibus, char tipo, short int dia, short int mes, int ano, short int hora, short int min);
 
 int main(){
-    vector<Passagem[40]> resgistroOnibus;
+    vector<Onibus> resgistroOnibus;
 
 
 
     return 0;
 }
 
-bool addOnibus(vector<Passagem[POLTRONAS]> &registros, char tipo, short int dia, short int mes, int ano, short int hora, short int min){
+bool addOnibus(vector<Onibus> &registros, char tipo, short int dia, short int mes, int ano, short int hora, short int min){
     int countViagens = 0;
-    Passagem onibus[POLTRONAS];
-    bool resultCriacao;
+    Onibus oni;
+    bool valido;
 
-    for(Passagem p : registros[0]){
-        if(p.dia == registros[0]->dia && p.mes == registros[0]->mes && p.ano == registros[0]->ano){
-            if(p.tipo == registros[0]->tipo)
+    for(Onibus p : registros){
+        if(p.poltronas[0].dia == dia && p.poltronas[0].mes == mes && p.poltronas[0].ano == ano){
+            if(p.poltronas[0].tipo == tipo)
                 countViagens++;
         }
     }
 
     if(countViagens <= VIAGENS_DIA){
-        resultCriacao = iniciarOnibus(*onibus, tipo, dia, mes, ano, hora, min);
-        if(resultCriacao){
-            registros.push_back(onibus);
+        valido = iniciarOnibus(oni, tipo, dia, mes, ano, hora, min);
+        if(valido){
+            registros.push_back(oni);
             return true;
         }
     }
     return false;
 }
 
-bool iniciarOnibus(Passagem &passagens, char tipo, short int dia, short int mes, int ano, short int hora, short int min){
+bool iniciarOnibus(Onibus &onibus, char tipo, short int dia, short int mes, int ano, short int hora, short int min){
     int i;
 
     if(validarData(dia, mes, ano) && validarHora(hora, min)){
         for(i=0; i<POLTRONAS; i++){
-            passagens.poltrona = i;
-            passagens.tipo = tipo;
-            passagens.min = min;
-            passagens.hora = hora;
-            passagens.dia = dia;
-            passagens.mes = mes;
-            passagens.ano = ano;
+            onibus.poltronas->poltrona = i;
+            onibus.poltronas->tipo = tipo;
+            onibus.poltronas->min = min;
+            onibus.poltronas->hora = hora;
+            onibus.poltronas->dia = dia;
+            onibus.poltronas->mes = mes;
+            onibus.poltronas->ano = ano;
         }
         return true;
+    }else{
+        cout << "Data ou hora invalida" << endl;
     }
     return false;
 
