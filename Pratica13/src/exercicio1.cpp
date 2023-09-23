@@ -8,15 +8,23 @@ const int POLTRONAS = 40;
 const int VIAGENS_DIA = 5;
 const float PRECO_PASSAGEM = 80.0;
 
+
+struct Data{
+    short int dia;
+    short int mes;
+    int ano;
+};
+
+struct Hora{
+    short int hora;
+    short int min;
+};
 struct Passagem{
     string nome;
     bool tipo; // ida RJ --> SP (0) ou volta RJ <-- SP (1)
     int poltrona;
-    int ano;
-    short int mes;
-    short int dia;
-    short int hora;
-    short int min;
+    Data data;
+    Hora hora;
 };
 
 struct Onibus{
@@ -25,7 +33,9 @@ struct Onibus{
 };
 
 // funcoes de validacao data hora
+bool iniciarData(Data &data, short int dia, short int mes, int ano);
 bool validarData(short int dia, short int mes, int ano);
+bool iniciarHora(Hora &horario, short int hora, short int min);
 bool validarHora(short int hora, short int min);
 bool isBissexto(short int ano);
 
@@ -47,7 +57,7 @@ bool addOnibus(vector<Onibus> &registros, char tipo, short int dia, short int me
     bool valido;
 
     for(Onibus p : registros){
-        if(p.poltronas[0].dia == dia && p.poltronas[0].mes == mes && p.poltronas[0].ano == ano){
+        if(p.poltronas[0].data.dia == dia && p.poltronas[0].data.mes == mes && p.poltronas[0].data.ano == ano){
             if(p.poltronas[0].tipo == tipo)
                 countViagens++;
         }
@@ -65,16 +75,15 @@ bool addOnibus(vector<Onibus> &registros, char tipo, short int dia, short int me
 
 bool iniciarOnibus(Onibus &onibus, char tipo, short int dia, short int mes, int ano, short int hora, short int min){
     int i;
+    Data data;
+    Hora horario;
 
-    if(validarData(dia, mes, ano) && validarHora(hora, min)){
+    if(iniciarData(data, dia, mes, ano) && iniciarHora(horario, hora, min)){
         for(i=0; i<POLTRONAS; i++){
             onibus.poltronas->poltrona = i;
             onibus.poltronas->tipo = tipo;
-            onibus.poltronas->min = min;
-            onibus.poltronas->hora = hora;
-            onibus.poltronas->dia = dia;
-            onibus.poltronas->mes = mes;
-            onibus.poltronas->ano = ano;
+            onibus.poltronas->data = data;
+            onibus.poltronas->hora = horario;
         }
         return true;
     }else{
@@ -82,6 +91,16 @@ bool iniciarOnibus(Onibus &onibus, char tipo, short int dia, short int mes, int 
     }
     return false;
 
+}
+
+bool iniciarData(Data &data, short int dia, short int mes, int ano){
+    if(validarData(dia, mes, ano)){
+        data.dia = dia;
+        data.mes = mes;
+        data.ano = ano;
+        return true;
+    }
+    return false;
 }
 
 bool validarData(short int dia, short int mes, int ano){
@@ -95,6 +114,15 @@ bool validarData(short int dia, short int mes, int ano){
         if((mes==4 || mes==6 || mes==9 || mes==11) && dia<=30) // meses com 30 dias
             return true;
         return false;
+    }
+    return false;
+}
+
+bool iniciarHora(Hora &horario, short int hora, short int min){
+    if(validarHora(hora, min)){
+        horario.hora = hora;
+        horario.min = min;
+        return true;
     }
     return false;
 }
