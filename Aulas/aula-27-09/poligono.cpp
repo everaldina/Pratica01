@@ -16,18 +16,21 @@ class Ponto{
         float getY(){
             return y;
         }
+        float getZ(){
+            return z;
+        }
 
         void le_Ponto(){
             cout << "Digite as coordenadas do ponto: ";
-            cin >> x >> y;
+            cin >> x >> y >> z;
         }
 
         string escreve_ponto(){
-            return "(" + to_string(x) + ", " + to_string(y) + ")";
+            return "(" + to_string(x) + ", " + to_string(y) + ", " + to_string(z) + ")";
         }
 
         float distancia(Ponto p){
-            return sqrt(pow(x-p.getX(), 2) + pow(y-p.getY(), 2));
+            return sqrt(pow(x-p.getX(), 2) + pow(y-p.getY(), 2) + pow(z-p.getZ(), 2));
         }
 };
 
