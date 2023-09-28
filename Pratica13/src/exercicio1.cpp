@@ -21,15 +21,17 @@ struct Hora{
 };
 struct Passagem{
     string nome;
-    bool tipo; // ida RJ --> SP (0) ou volta RJ <-- SP (1)
-    int poltrona;
+    string cpf;
+    int idade;
+    short int poltrona;
     Data data;
     Hora hora;
 };
 
 struct Onibus{
-    Passagem poltronas[POLTRONAS];
+    Passagem passageiros[POLTRONAS];
     int qntdPassagens = 0;
+    bool tipo; // ida RJ --> SP (0) ou volta RJ <-- SP (1)
 };
 
 // funcoes de validacao data hora
@@ -42,6 +44,13 @@ bool isBissexto(short int ano);
 // funcoes de onibus
 bool addOnibus(vector<Onibus> &registros, char tipo, short int dia, short int mes, int ano, short int hora, short int min);
 bool iniciarOnibus(Onibus &onibus, char tipo, short int dia, short int mes, int ano, short int hora, short int min);
+
+// funcoes passagem
+bool validarPassagem(string nome, string cpf, int idade, short int poltrona, short int min, short int hora, short int dia, short int mes, short int ano);
+bool iniciarPassagem(Passagem &passageiro, string nome, string cpf, int idade, short int poltrona, short int min, short int hora, short int dia, short int mes, short int ano);
+bool verificarCPF(string CPF);
+string formatCPF(string CPF);
+string cpfToNum(string CPF);
 
 int main(){
     vector<Onibus> resgistroOnibus;
@@ -57,8 +66,8 @@ bool addOnibus(vector<Onibus> &registros, char tipo, short int dia, short int me
     bool valido;
 
     for(Onibus p : registros){
-        if(p.poltronas[0].data.dia == dia && p.poltronas[0].data.mes == mes && p.poltronas[0].data.ano == ano){
-            if(p.poltronas[0].tipo == tipo)
+        if(p.passageiros[0].data.dia == dia && p.passageiros[0].data.mes == mes && p.passageiros[0].data.ano == ano){
+            if(p.tipo == tipo)
                 countViagens++;
         }
     }
@@ -80,10 +89,9 @@ bool iniciarOnibus(Onibus &onibus, char tipo, short int dia, short int mes, int 
 
     if(iniciarData(data, dia, mes, ano) && iniciarHora(horario, hora, min)){
         for(i=0; i<POLTRONAS; i++){
-            onibus.poltronas->poltrona = i;
-            onibus.poltronas->tipo = tipo;
-            onibus.poltronas->data = data;
-            onibus.poltronas->hora = horario;
+            onibus.passageiros->poltrona = i;
+            onibus.passageiros->data = data;
+            onibus.passageiros->hora = horario;
         }
         return true;
     }else{
@@ -93,12 +101,79 @@ bool iniciarOnibus(Onibus &onibus, char tipo, short int dia, short int mes, int 
 
 }
 
+bool validarPassagem(string nome, string cpf, int idade, short int poltrona, short int min, short int hora, short int dia, short int mes, short int ano){
+    if(idade >= 0 && poltrona >= 1 && poltrona <= POLTRONAS){
+        if(validarData(dia, mes, ano) && validarHora(hora, min) && verificarCPF(cpfToNum(cpf))){
+            return true;
+        }
+    }
+    return false;
+}
+
+bool iniciarPassagem(Passagem &passageiro, string nome, string cpf, int idade, short int poltrona, short int min, short int hora, short int dia, short int mes, short int ano){
+    if(validarPassagem(nome, cpf, idade, poltrona, min, hora, dia, mes, ano)){
+        passageiro.nome = nome;
+        passageiro.cpf = cpf;
+        passageiro.idade = idade;
+        passageiro.poltrona = poltrona;
+        iniciarData(passageiro.data, dia, mes, ano);
+        iniciarHora(passageiro.hora, hora, min);
+        return true;
+    }else{
+        passageiro.nome = "";
+        passageiro.cpf = "";
+        passageiro.idade = 0;
+        passageiro.poltrona = 0;
+        iniciarData(passageiro.data, 0, 0, 0);
+        iniciarHora(passageiro.hora, 0, 0);
+        return false;
+    }
+}
+
+bool verificarCPF(string CPF){
+    if(CPF.length() == 11){ // apenas numeros
+        for(char ch : CPF){
+            if(!isdigit(ch))
+                return false;
+        }
+        return true;
+    }
+    return false;
+}
+
+string cpfToNum(string CPF){
+    string cpfNum = "";
+    for(char ch : CPF){
+        if(isdigit(ch))
+            cpfNum += ch;
+    }
+    return cpfNum;
+}
+
+string formatCPF(string CPF){
+    string cpfFormat = "";
+    for(int i=0; i<CPF.length(); i++){
+        if(i==3 || i==6){
+            cpfFormat += '.';
+        }else if(i==9){
+            cpfFormat += '-';
+        }
+        cpfFormat += CPF[i];
+    }
+    return cpfFormat;
+}
+
 bool iniciarData(Data &data, short int dia, short int mes, int ano){
     if(validarData(dia, mes, ano)){
         data.dia = dia;
         data.mes = mes;
         data.ano = ano;
         return true;
+    }else{
+        data.dia = 0;
+        data.mes = 0;
+        data.ano = 0;
+        return false;
     }
     return false;
 }
@@ -123,6 +198,10 @@ bool iniciarHora(Hora &horario, short int hora, short int min){
         horario.hora = hora;
         horario.min = min;
         return true;
+    }else{
+        horario.hora = 0;
+        horario.min = 0;
+        return false;
     }
     return false;
 }
