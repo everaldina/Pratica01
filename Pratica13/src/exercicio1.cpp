@@ -44,6 +44,8 @@ bool isBissexto(short int ano);
 // funcoes de onibus
 bool addOnibus(vector<Onibus> &registros, char tipo, short int dia, short int mes, int ano, short int hora, short int min);
 bool iniciarOnibus(Onibus &onibus, char tipo, short int dia, short int mes, int ano, short int hora, short int min);
+int buscaViagem(vector<Onibus> &registros, short int dia, short int mes, int ano, char tipo);
+bool addPassageiro(vector<Onibus> &registros, Passagem passageiro, bool tipo);
 
 // funcoes passagem
 bool validarPassagem(string nome, string cpf, int idade, short int poltrona, short int min, short int hora, short int dia, short int mes, short int ano);
@@ -88,17 +90,47 @@ bool iniciarOnibus(Onibus &onibus, char tipo, short int dia, short int mes, int 
     Hora horario;
 
     if(iniciarData(data, dia, mes, ano) && iniciarHora(horario, hora, min)){
+        onibus.tipo = tipo;
         for(i=0; i<POLTRONAS; i++){
-            onibus.passageiros->poltrona = i;
-            onibus.passageiros->data = data;
-            onibus.passageiros->hora = horario;
+            onibus.passageiros[i].poltrona = 0; // todas as poltronas vazias
+            onibus.passageiros[i].data = data;
+            onibus.passageiros[i].hora = horario;
         }
         return true;
     }else{
-        cout << "Data ou hora invalida" << endl;
+        onibus.tipo = tipo;
+        for(i=0; i<POLTRONAS; i++){
+            onibus.passageiros[i].poltrona = 0;
+            onibus.passageiros[i].data = data;
+            onibus.passageiros[i].hora = horario;
+        }
+        return false;   
+    }
+
+}
+
+int buscaViagem(vector<Onibus> &registros, short int dia, short int mes, int ano, char tipo){
+    int i;
+    for(i = 0; i<registros.size(); i++){
+        if(registros[i].passageiros[0].data.dia == dia && registros[i].passageiros[0].data.mes == mes && registros[i].passageiros[0].data.ano == ano){
+            if(registros[i].tipo == tipo)
+                return i;
+        }
+    }
+    // caso nao encontre, retorna indice -1
+    return -1;
+}
+
+bool addPassageiro(vector<Onibus> &registros, Passagem passageiro, bool tipo){
+    int indice = buscaViagem(registros, passageiro.data.dia, passageiro.data.mes, passageiro.data.ano, tipo);
+    if(indice != -1){
+        if(registros[indice].passageiros[passageiro.poltrona].poltrona == 0){
+            registros[indice].passageiros[passageiro.poltrona] = passageiro;
+            registros[indice].qntdPassagens++;
+            return true;
+        }
     }
     return false;
-
 }
 
 bool validarPassagem(string nome, string cpf, int idade, short int poltrona, short int min, short int hora, short int dia, short int mes, short int ano){
