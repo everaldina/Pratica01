@@ -1,35 +1,62 @@
 #include <iostream>
 #include <fstream>
+#include <vector>
+#include <string>
 
 using namespace std;
 
-int main(){
-    // Abrindo um arquivo para escrita
-    ofstream arquivo_saida;
-    arquivo_saida.open("exemplo.txt", ios_base::out);
+class BancoDeDados{
+    public:
+        static string nomeArquivo;
 
-    // Verifica se o arquivo foi aberto corretamente
-    if(arquivo_saida.is_open()){
-        arquivo_saida << "Escrevendo no arquivo" << endl;
-        arquivo_saida << 20 + 30 << endl;
-        arquivo_saida.close();
-    }else
-        cout << "Erro ao abrir o arquivo" << endl;
+        static void salvarDados(vector<string> dados){
+            // Abrindo um arquivo para escrita
+            ofstream arquivo;
 
-    // Abrindo um arquivo para leitura
-    ifstream arquivo_entrada;
-    arquivo_entrada.open("exemplo.txt", ios_base::in);
+            arquivo.open(nomeArquivo, ios_base::out);
 
-    // Verifica se o arquivo foi aberto corretamente
-    if(arquivo_entrada.is_open()){
-        string linha;
-        while(arquivo_entrada.eof() == false){
-            getline(arquivo_entrada, linha);
-            cout << linha << endl;
+            // Verifica se o arquivo foi aberto corretamente
+            if(arquivo.is_open()){
+                for(string s : dados){
+                    arquivo << s << endl;
+                }
+                arquivo.close();
+            }else
+                cout << "Erro ao abrir o arquivo" << endl;
         }
-        arquivo_entrada.close();
-    }else
-        cout << "Erro ao abrir o arquivo" << endl;
+
+        static vector<string> recuperarDados(){
+            vector<string> dados;
+
+            // Abrindo um arquivo para leitura
+            ifstream arquivo;
+            arquivo.open(nomeArquivo, ios_base::in);
+
+            // Verifica se o arquivo foi aberto corretamente
+            if(arquivo.is_open()){
+                string linha;
+                while(arquivo.eof() == false){
+                    getline(arquivo, linha);
+                    dados.push_back(linha);
+                }
+                arquivo.close();
+            }else
+                cout << "Erro ao abrir o arquivo" << endl;
+        }
+};
+
+int main(){
+    vector<string> dados = {"Joao\n", "Maria Clara", "\nJose", " Ana\t", "Pedro"};
+    vector<string> dadosRecuperados;
+    BancoDeDados::nomeArquivo = "dados.txt";
+
+    BancoDeDados::salvarDados(dados);
+    dadosRecuperados = BancoDeDados::recuperarDados();
+    
+    cout << "Dados recuperados: " << endl;
+    for(string s : dadosRecuperados){
+        cout << s;
+    }
 
     return 0;
 }
