@@ -57,10 +57,78 @@ string cpfToNum(string CPF);
 int main(){
     vector<Onibus> resgistroOnibus;
 
-
+    //1. Qual o total arrecadado para uma determinada viagem.
+    //2. Qual o total arrecadado em um determinado mês.
+    //3. Qual o nome do passageiro de uma determinada poltrona P de uma determinada viagem.
+    //4. Qual o horário de viagem mais rentável.
+    //5. Qual a média de idade dos passageiros.
 
     return 0;
 }
+
+// 1
+float totalArrecadado(vector<Onibus> &registros, short int dia, short int mes, int ano, char tipo){
+    int indice = buscaViagem(registros, dia, mes, ano, tipo);
+    if(indice != -1){
+        return registros[indice].qntdPassagens * PRECO_PASSAGEM;
+    }
+    return -1;
+}
+
+// 2
+float totalArrecadado(vector<Onibus> &registros, short int mes, int ano){
+    float total = 0;
+    for(Onibus p : registros){
+        if(p.passageiros[0].data.mes == mes && p.passageiros[0].data.ano == ano){
+            total += p.qntdPassagens * PRECO_PASSAGEM;
+        }
+    }
+    return total;
+}
+
+// 3
+string nomePassageiro(vector<Onibus> &registros, short int dia, short int mes, int ano, char tipo, short int poltrona){
+    int indice = buscaViagem(registros, dia, mes, ano, tipo);
+    if(indice != -1){
+        return registros[indice].passageiros[poltrona].nome;
+    }
+    return "";
+}
+
+// 4
+void horarioMaisRentavel(vector<Onibus> &registros, Hora &horaIdaRentavel, Hora &horaVotaRentavel){
+    int i, maiorIda = 0, maiorVolta = 0, rent;
+    short int horaI, minI, horaV, minV;
+    for(i=0; i<registros.size(); i++){
+        rent = registros[i].qntdPassagens;
+        if(registros[i].tipo == 0 && rent > maiorIda){
+            maiorIda = registros[i].qntdPassagens;
+            horaI = registros[i].passageiros[0].hora.hora;
+            minI = registros[i].passageiros[0].hora.min;
+        }else if(registros[i].tipo == 1 && rent > maiorVolta){
+            maiorVolta = registros[i].qntdPassagens;
+            horaV = registros[i].passageiros[0].hora.hora;
+            minV = registros[i].passageiros[0].hora.min;
+        }
+    }
+    iniciarHora(horaIdaRentavel, horaI, minI);
+    iniciarHora(horaVotaRentavel, horaV, minV);
+}
+
+// 5
+float mediaIdade(vector<Onibus> &registros){
+    int i, soma = 0, qntdPassageiros = 0;
+    for(i = 0; i<registros.size(); i++){
+        for(Passagem p : registros[i].passageiros){
+            if(p.poltrona != 0){
+                soma += p.idade;
+                qntdPassageiros++;
+            }
+        }
+    }
+    return soma/registros.size();
+}
+
 
 bool addOnibus(vector<Onibus> &registros, char tipo, short int dia, short int mes, int ano, short int hora, short int min){
     int countViagens = 0;
