@@ -57,6 +57,17 @@ string cpfToNum(string CPF);
 int main(){
     vector<Onibus> resgistroOnibus;
 
+    // iniciando onibus
+    addOnibus(resgistroOnibus, 0, 21, 5, 2022, 10, 30);
+    addOnibus(resgistroOnibus, 1, 21, 5, 2022, 10, 30);
+    addOnibus(resgistroOnibus, 1, 21, 5, 2022, 10, 40);
+    
+    addOnibus(resgistroOnibus, 1, 25, 5, 2022, 21, 50);
+    addOnibus(resgistroOnibus, 0, 25, 5, 2022, 21, 50);
+    addOnibus(resgistroOnibus, 0, 25, 5, 2022, 20, 0);
+    addOnibus(resgistroOnibus, 0, 25, 5, 2022, 10, 20);
+
+
     //1. Qual o total arrecadado para uma determinada viagem.
     //2. Qual o total arrecadado em um determinado mês.
     //3. Qual o nome do passageiro de uma determinada poltrona P de uma determinada viagem.
@@ -137,8 +148,12 @@ bool addOnibus(vector<Onibus> &registros, char tipo, short int dia, short int me
 
     for(Onibus p : registros){
         if(p.passageiros[0].data.dia == dia && p.passageiros[0].data.mes == mes && p.passageiros[0].data.ano == ano){
-            if(p.tipo == tipo)
-                countViagens++;
+            if(p.tipo == tipo){
+                if(p.passageiros[0].hora.hora == hora && p.passageiros[0].hora.min == min)
+                    return false;
+                else
+                    countViagens++;
+            }
         }
     }
 
