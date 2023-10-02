@@ -1,6 +1,7 @@
 #include <iostream>
 #include <ctime>
 #include <vector>
+#include <string>
 
 using namespace std;
 
@@ -44,7 +45,7 @@ bool isBissexto(short int ano);
 // funcoes de onibus
 bool addOnibus(vector<Onibus> &registros, char tipo, short int dia, short int mes, int ano, short int hora, short int min);
 bool iniciarOnibus(Onibus &onibus, char tipo, short int dia, short int mes, int ano, short int hora, short int min);
-int buscaViagem(vector<Onibus> &registros, short int dia, short int mes, int ano, char tipo);
+int buscaViagem(vector<Onibus> &registros, short int dia, short int mes, int ano, short int hora, short int min, char tipo);
 bool addPassageiro(vector<Onibus> &registros, Passagem passageiro, bool tipo);
 
 // funcoes passagem
@@ -54,23 +55,149 @@ bool verificarCPF(string CPF);
 string formatCPF(string CPF);
 string cpfToNum(string CPF);
 
+// funcoes teste
+float totalArrecadado(vector<Onibus> &registros, short int dia, short int mes, int ano, short int hora, short int min, char tipo);
+float totalArrecadado(vector<Onibus> &registros, short int mes, int ano);
+string nomePassageiro(vector<Onibus> &registros, short int dia, short int mes, int ano, short int hora, short int min, char tipo, short int poltrona);
+
 int main(){
     vector<Onibus> resgistroOnibus;
 
     // iniciando onibus
-    addOnibus(resgistroOnibus, 0, 21, 5, 2022, 10, 30);
-    addOnibus(resgistroOnibus, 1, 21, 5, 2022, 10, 30);
-    addOnibus(resgistroOnibus, 1, 21, 5, 2022, 10, 40);
+    cout << "add onibus 1: " << addOnibus(resgistroOnibus, 0, 21, 5, 2022, 10, 30) << endl; // 3 pessoas
+    cout << "add onibus 2: " << addOnibus(resgistroOnibus, 1, 21, 5, 2022, 10, 30) << endl; // 2 pessoas
+    cout << "add onibus 3: " << addOnibus(resgistroOnibus, 1, 21, 5, 2022, 10, 40) << endl; // 3 pessoas // mais lucrativo volta
     
-    addOnibus(resgistroOnibus, 1, 25, 5, 2022, 21, 50);
-    addOnibus(resgistroOnibus, 0, 25, 5, 2022, 21, 50);
-    addOnibus(resgistroOnibus, 0, 25, 5, 2022, 20, 0);
-    addOnibus(resgistroOnibus, 0, 25, 5, 2022, 10, 20);
+    cout << "add onibus 4: " << addOnibus(resgistroOnibus, 1, 25, 5, 2022, 21, 50) << endl; // 1 pessoa
+    cout << "add onibus 5: " << addOnibus(resgistroOnibus, 0, 25, 6, 2022, 21, 50) << endl; // 2 pessoa
+    cout << "add onibus 6: " << addOnibus(resgistroOnibus, 0, 25, 6, 2022, 20, 0) << endl;  // 1 pessoa 
+    cout << "add onibus 7: " << addOnibus(resgistroOnibus, 0, 25, 6, 2022, 10, 20) << endl; // 4 pessoa // mais lucrativo ida
+    cout << endl;
 
+    // adcionando passagens
+    Passagem pass[16];
+    string nomes[16] = {"João", "Maria", "Clara", "Carlos", "Jon", "Marcos", "Ana", 
+                        "Joana", "Pedro", "Paulo", "Lucas", "Lucia", "Luis", "Luisa", 
+                        "Larissa", "Larissa"};
+    int idades[16] = {20, 19, 30, 31, 10, 31, 42, 27, 20, 19, 30, 31, 10, 31, 42, 27};
+
+    // adicionando passageiros
+    for(int i = 0; i< 16;i++){
+        switch (i){
+            // onibus 1
+            case 0:
+            case 1:
+            case 2:
+                cout << "Adicionando passagem" << i<< ": " << iniciarPassagem(pass[i], nomes[i], "123.456.789-10", idades[i], i+1, 30, 10, 21, 5, 2022);
+                break;
+            // onibus 2
+            case 3:
+            case 4:
+                cout << "Adicionando passagem" << i<< ": " << iniciarPassagem(pass[i], nomes[i], "123.456.789-10", idades[i], i+1, 30, 10, 21, 5, 2022);
+                break;
+            // onibus 3
+            case 5:
+            case 6:
+            case 7:
+                cout << "Adicionando passagem" << i<< ": " << iniciarPassagem(pass[i], nomes[i], "123.456.789-10", idades[i], i+1, 40, 10, 21, 5, 2022);
+                break;
+            // onibus 4
+            case 8:
+                cout << "Adicionando passagem" << i<< ": " << iniciarPassagem(pass[i], nomes[i], "123.456.789-10", idades[i], i+1, 50, 21, 25, 5, 2022);
+                break;
+            // onibus 5
+            case 9:
+            case 10:
+                cout << "Adicionando passagem" << i<< ": " << iniciarPassagem(pass[i], nomes[i], "123.456.789-10", idades[i], i+1, 50, 21, 25, 6, 2022);
+                break;
+            // onibus 6
+            case 11:
+                cout << "Adicionando passagem" << i<< ": " << iniciarPassagem(pass[i], nomes[i], "123.456.789-10", idades[i], i+1, 0, 20, 25, 6, 2022);
+                break;
+            // onibus 7
+            case 12:
+            case 13:
+            case 14:
+            case 15:
+                cout << "Adicionando passagem" << i<< ": " << iniciarPassagem(pass[i], nomes[i], "123.456.789-10", idades[i], i+1, 20, 10, 25, 6, 2022);
+                break;
+        }
+        cout << endl << endl;
+    }
+
+    // adicionando passageiros aos onibus
+    for(int i = 0; i< 16;i++){
+        switch (i){
+            // onibus 1
+            case 0:
+            case 1:
+            case 2:
+                cout << "Adicionando passageiro" << i<< ": " << addPassageiro(resgistroOnibus, pass[i], 0);
+                break;
+            // onibus 2, 3, 4
+            case 3:
+            case 4:
+            case 5:
+            case 6:
+            case 7:
+            case 8:
+                cout << "Adicionando passageiro" << i<< ": " << addPassageiro(resgistroOnibus, pass[i], 1);
+                break;
+            // onibus 5, 6, 7
+            case 9:
+            case 10:
+            case 11:
+            case 12:
+            case 13:
+            case 14:
+            case 15:
+                cout << "Adicionando passageiro" << i<< ": " << addPassageiro(resgistroOnibus, pass[i], 0);
+                break;
+        }
+        cout << endl << endl;
+    }
 
     //1. Qual o total arrecadado para uma determinada viagem.
+    cout << "Viagem 1 - qntdPassageiros = " << resgistroOnibus[0].qntdPassagens << 
+            " | Total arregadado: " << totalArrecadado(resgistroOnibus, 21, 5, 2022, 10, 30, 0) << endl; // 3 pessoas * 80
+    cout << "Viagem 2 - qntdPassageiros = " << resgistroOnibus[1].qntdPassagens << 
+            " | Total arregadado: " <<  totalArrecadado(resgistroOnibus, 21, 5, 2022, 10, 30, 1) << endl; // 2 pessoas * 80
+    cout << "Viagem 3 - qntdPassageiros = " << resgistroOnibus[2].qntdPassagens << 
+            " | Total arregadado: " << totalArrecadado(resgistroOnibus, 21, 5, 2022, 10, 40, 1) << endl; // 3 pessoas * 80
+    cout << "Viagem 4 - qntdPassageiros = " << resgistroOnibus[3].qntdPassagens << 
+            " | Total arregadado: " <<  totalArrecadado(resgistroOnibus, 25, 5, 2022, 21, 50, 1) << endl; // 1 pessoa * 80
+    cout << "Viagem 5 - qntdPassageiros = " << resgistroOnibus[4].qntdPassagens << 
+            " | Total arregadado: " <<  totalArrecadado(resgistroOnibus, 25, 6, 2022, 21, 50, 0) << endl; // 2 pessoa * 80
+    cout << "Viagem 6 - qntdPassageiros = " << resgistroOnibus[5].qntdPassagens << 
+            " | Total arregadado: " << totalArrecadado(resgistroOnibus, 25, 6, 2022, 20, 0, 0) << endl; // 1 pessoa * 80
+    cout << "Viagem 7 - qntdPassageiros = " << resgistroOnibus[6].qntdPassagens << 
+            " | Total arregadado: " << totalArrecadado(resgistroOnibus, 25, 6, 2022, 10, 20, 0) << endl; // 4 pessoa * 80
+
     //2. Qual o total arrecadado em um determinado mês.
+    cout << "Total arregadado em maio de 2022: " << totalArrecadado(resgistroOnibus, 5, 2022) << endl; // onibus 1 (3 pessoas), 2 (2 pessoas) e 3 (3 pessoas) e 4 (1 pessoa)
+    cout << "Total arregadado em junho de 2022: " << totalArrecadado(resgistroOnibus, 6, 2022) << endl << endl; // 5 (2 pessoas), 6 (1 pessoa) e 7 (4 pessoas)
+
     //3. Qual o nome do passageiro de uma determinada poltrona P de uma determinada viagem.
+    // mostrando passageiros dos onibus 1,
+    string nome;
+    for (int i = 0; i < POLTRONAS; i++){
+        nome = nomePassageiro(resgistroOnibus, 21, 5, 2022, 10, 30, 0, i+1);
+        if (nome != "")
+            cout << "Onibus 1 - poltrona " << i+1 << ": " << nome << endl;
+    }
+    // mostrando passageitos dos onibus 4
+    for (int i = 0; i < POLTRONAS; i++){
+        nome = nomePassageiro(resgistroOnibus, 25, 5, 2022, 21, 50, 1, i+1);
+        if (nome != "")
+            cout << "Onibus 4 - poltrona " << i+1 << ": " << nome << endl;
+    }
+    // mostrando passageitos dos onibus 7
+    for (int i = 0; i < POLTRONAS; i++){
+        nome = nomePassageiro(resgistroOnibus, 25, 6, 2022, 10, 20, 0, i+1);
+        if (nome != "")
+            cout << "Onibus 7 - poltrona " << i+1 << ": " << nome << endl;
+    }
+
     //4. Qual o horário de viagem mais rentável.
     //5. Qual a média de idade dos passageiros.
 
@@ -78,8 +205,8 @@ int main(){
 }
 
 // 1
-float totalArrecadado(vector<Onibus> &registros, short int dia, short int mes, int ano, char tipo){
-    int indice = buscaViagem(registros, dia, mes, ano, tipo);
+float totalArrecadado(vector<Onibus> &registros, short int dia, short int mes, int ano, short int hora, short int min, char tipo){
+    int indice = buscaViagem(registros, dia, mes, ano, hora, min, tipo);
     if(indice != -1){
         return registros[indice].qntdPassagens * PRECO_PASSAGEM;
     }
@@ -98,8 +225,8 @@ float totalArrecadado(vector<Onibus> &registros, short int mes, int ano){
 }
 
 // 3
-string nomePassageiro(vector<Onibus> &registros, short int dia, short int mes, int ano, char tipo, short int poltrona){
-    int indice = buscaViagem(registros, dia, mes, ano, tipo);
+string nomePassageiro(vector<Onibus> &registros, short int dia, short int mes, int ano, short int hora, short int min, char tipo, short int poltrona){
+    int indice = buscaViagem(registros, dia, mes, ano, hora, min, tipo);
     if(indice != -1){
         return registros[indice].passageiros[poltrona].nome;
     }
@@ -192,12 +319,14 @@ bool iniciarOnibus(Onibus &onibus, char tipo, short int dia, short int mes, int 
 
 }
 
-int buscaViagem(vector<Onibus> &registros, short int dia, short int mes, int ano, char tipo){
+int buscaViagem(vector<Onibus> &registros, short int dia, short int mes, int ano, short int hora, short int min, char tipo){
     int i;
     for(i = 0; i<registros.size(); i++){
         if(registros[i].passageiros[0].data.dia == dia && registros[i].passageiros[0].data.mes == mes && registros[i].passageiros[0].data.ano == ano){
-            if(registros[i].tipo == tipo)
-                return i;
+            if(registros[i].passageiros[0].hora.hora == hora && registros[i].passageiros[0].hora.min == min){
+                if(registros[i].tipo == tipo)
+                    return i;
+            }
         }
     }
     // caso nao encontre, retorna indice -1
@@ -205,7 +334,7 @@ int buscaViagem(vector<Onibus> &registros, short int dia, short int mes, int ano
 }
 
 bool addPassageiro(vector<Onibus> &registros, Passagem passageiro, bool tipo){
-    int indice = buscaViagem(registros, passageiro.data.dia, passageiro.data.mes, passageiro.data.ano, tipo);
+    int indice = buscaViagem(registros, passageiro.data.dia, passageiro.data.mes, passageiro.data.ano, passageiro.hora.hora, passageiro.hora.min, tipo);
     if(indice != -1){
         if(registros[indice].passageiros[passageiro.poltrona].poltrona == 0){
             registros[indice].passageiros[passageiro.poltrona] = passageiro;
