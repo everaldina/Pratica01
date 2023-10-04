@@ -59,6 +59,8 @@ string cpfToNum(string CPF);
 float totalArrecadado(vector<Onibus> &registros, short int dia, short int mes, int ano, short int hora, short int min, char tipo);
 float totalArrecadado(vector<Onibus> &registros, short int mes, int ano);
 string nomePassageiro(vector<Onibus> &registros, short int dia, short int mes, int ano, short int hora, short int min, char tipo, short int poltrona);
+void horarioMaisRentavel(vector<Onibus> &registros, Hora &horaIdaRentavel, Hora &horaVotaRentavel);
+float mediaIdade(vector<Onibus> &registros);
 
 int main(){
     vector<Onibus> resgistroOnibus;
@@ -79,7 +81,7 @@ int main(){
     string nomes[16] = {"João", "Maria", "Clara", "Carlos", "Jon", "Marcos", "Ana", 
                         "Joana", "Pedro", "Paulo", "Lucas", "Lucia", "Luis", "Luisa", 
                         "Larissa", "Larissa"};
-    int idades[16] = {20, 19, 30, 31, 10, 31, 42, 27, 20, 19, 30, 31, 10, 31, 42, 27};
+    int idades[16] = {20, 19, 30, 31, 10, 31, 42, 27, 20, 19, 30, 31, 10, 31, 42, 27}; // media de idade = 26.25
 
     // adicionando passageiros
     for(int i = 0; i< 16;i++){
@@ -197,9 +199,17 @@ int main(){
         if (nome != "")
             cout << "Onibus 7 - poltrona " << i+1 << ": " << nome << endl;
     }
+    cout << endl << endl; 
 
     //4. Qual o horário de viagem mais rentável.
+    Hora horaIdaRentavel, horaVotaRentavel;
+    horarioMaisRentavel(resgistroOnibus, horaIdaRentavel, horaVotaRentavel);
+    cout << "Horario mais rentavel ida: " << horaIdaRentavel.hora << ":" << horaIdaRentavel.min << endl;
+    cout << "Horario mais rentavel volta: " << horaVotaRentavel.hora << ":" << horaVotaRentavel.min << endl << endl;
+
     //5. Qual a média de idade dos passageiros.
+    float media = mediaIdade(resgistroOnibus);
+    cout << "Media de idade dos passageiros: " << media << endl << endl;
 
     return 0;
 }
@@ -228,7 +238,7 @@ float totalArrecadado(vector<Onibus> &registros, short int mes, int ano){
 string nomePassageiro(vector<Onibus> &registros, short int dia, short int mes, int ano, short int hora, short int min, char tipo, short int poltrona){
     int indice = buscaViagem(registros, dia, mes, ano, hora, min, tipo);
     if(indice != -1){
-        return registros[indice].passageiros[poltrona].nome;
+        return registros[indice].passageiros[poltrona-1].nome;
     }
     return "";
 }
@@ -237,6 +247,7 @@ string nomePassageiro(vector<Onibus> &registros, short int dia, short int mes, i
 void horarioMaisRentavel(vector<Onibus> &registros, Hora &horaIdaRentavel, Hora &horaVotaRentavel){
     int i, maiorIda = 0, maiorVolta = 0, rent;
     short int horaI, minI, horaV, minV;
+
     for(i=0; i<registros.size(); i++){
         rent = registros[i].qntdPassagens;
         if(registros[i].tipo == 0 && rent > maiorIda){
@@ -255,7 +266,8 @@ void horarioMaisRentavel(vector<Onibus> &registros, Hora &horaIdaRentavel, Hora 
 
 // 5
 float mediaIdade(vector<Onibus> &registros){
-    int i, soma = 0, qntdPassageiros = 0;
+    int i, qntdPassageiros = 0;
+    float soma = 0;
     for(i = 0; i<registros.size(); i++){
         for(Passagem p : registros[i].passageiros){
             if(p.poltrona != 0){
@@ -264,7 +276,7 @@ float mediaIdade(vector<Onibus> &registros){
             }
         }
     }
-    return soma/registros.size();
+    return soma/qntdPassageiros;
 }
 
 
