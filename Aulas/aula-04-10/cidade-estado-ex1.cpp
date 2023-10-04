@@ -68,7 +68,17 @@ int main(){
         cout << "Digite a UF do estado: ";
         getline(cin, uf);
 
-        estados.push_back(Estado(estado, uf));
+        for (Estado e : estados){
+            if(e.getNome() == estado){
+                cout << "Estado ja cadastrado" << endl;
+                achou = true;
+                break;
+            }
+        }
+
+        if(!achou)
+            estados.push_back(Estado(estado, uf));
+        achou = false;
 
         cout << "Deseja continuar (0/1)? ";
         cin >> continuar;
@@ -86,14 +96,19 @@ int main(){
 
         for(Estado e : estados){
             if(e.getNome() == estado){
-                cidades.push_back(Cidade(cidade, &e));
-                achou = true;
+                for (Cidade c : cidades){
+                    if(c.getNome() == cidade){
+                        cout << "Cidade ja cadastrada" << endl;
+                        achou = true;
+                        break;
+                    }
+                }
+                if(!achou)
+                    cidades.push_back(Cidade(cidade, &e));
                 break;
             }
         }
-        if(!achou){
-            cout << "Estado nao encontrado" << endl;
-        }
+        
         achou = false;
 
         cout << "Deseja continuar (0/1)? ";
