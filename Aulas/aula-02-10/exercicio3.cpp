@@ -93,6 +93,7 @@ class DVD : public ItemBiblioteca{
         string toString(){
             return "DVD: " + getTitulo() + " - " + getAutor() + "\nNumero de copias: " + to_string(getNumCopia()) + "\nDiretor: " + getDiretor() + "\nDuracao: " + to_string(getDuracao());
         }
+
 };
 
 int main(){
